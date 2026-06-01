@@ -1,16 +1,66 @@
-# tool 함수를 만들 때 doc string을 작성해서 CrewAI 한테 이 툴에 대한 설명을 전달할 수 있음(함수의 스키마)
-
-
 from crewai.tools import tool
+from crewai_tools import SerperDevTool
+from playwright.sync_api import sync_playwright
+import time
+from bs4 import BeautifulSoup
+
+search_tool = SerperDevTool()
 
 
 @tool
+def scrape_tool(url: str):
+    """
+    Use this when you need to read the content of a website.
+    Returns the content of a website, in case the website is not available, it
+    returns 'No Content'.
+    Input should be a 'url' string. for example(
+        https://www.bbc.com/korean/articles/c203gllq930o'
+    )
+    """
 
-def count_letters(sentence: str):
-    """
-    This function is to count the amount of letters in a sentence.
-    The input is a `sentence` string.
-    The output is a number.
-    """
-    print("tool called with input:", sentence)
-    return len(sentence)
+    print(f"Scraping URL: {url}")
+
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+
+        page = browser.new_page()
+
+        page.goto(url)
+
+        time.sleep(5)
+
+        html = page.content()
+
+        browser.close()
+
+        soup = BeautifulSoup(html, "html.parser")
+
+        unwanted_tags = [
+            "header",
+            "footer",
+            "nav",
+            "aside",
+            "script",
+            "style",
+            "noscript",
+            "iframe",
+            "form",
+            "button",
+            "input",
+            "select",
+            "textarea",
+            "img",
+            "svg",
+            "canvas",
+            "audio",
+            "video",
+            "embed",
+            "object",
+        ]
+
+        for tag in soup.find_all(unwanted_tags):
+            tag.decompose()
+
+        content = soup.get_text(separator=" ")
+
+        return content if content != "" else "No Content"
