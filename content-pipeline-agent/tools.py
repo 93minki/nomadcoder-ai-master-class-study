@@ -1,8 +1,8 @@
-import os, re
-from crewai.tools import tool
-from firecrawl import FirecrawlApp
-from firecrawl.v2.types import ScrapeOptions
+import os
+import re
+
 import requests
+from crewai.tools import tool
 
 
 @tool
