@@ -1,18 +1,60 @@
+# ===== Environment & secrets =====
 .env
 .env.*
 !.env.example
+
+# ===== Python =====
 __pycache__/
 *.py[cod]
-.venv/
-venv/
-.DS_Store
-.idea/
-.vscode/
-
-.uv/
+*$py.class
+*.so
+.Python
+build/
+dist/
+wheels/
+*.egg-info/
+.eggs/
+*.egg
+pip-wheel-metadata/
 .mypy_cache/
 .ruff_cache/
 .pytest_cache/
-
-.crewai/
+.coverage
+htmlcov/
+.tox/
+.nox/
 *.log
+
+# ===== Virtual environments =====
+.venv/
+venv/
+ENV/
+
+# ===== uv (local cache only; keep uv.lock committed) =====
+.uv/
+
+# ===== Jupyter / Notebook =====
+.ipynb_checkpoints/
+profile_default/
+ipython_config.py
+
+# ===== Generated outputs & runtime artifacts =====
+report.md
+**/output/
+**/outputs/
+*.sqlite
+*.db
+
+# ===== CrewAI / agent runtime =====
+.crewai/
+
+# ===== OS =====
+.DS_Store
+Thumbs.db
+
+# ===== Editors =====
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
