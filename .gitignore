@@ -44,6 +44,8 @@ report.md
 **/outputs/
 *.sqlite
 *.db
+*.db-wal
+*.db-shm
 
 # ===== CrewAI / agent runtime =====
 .crewai/
