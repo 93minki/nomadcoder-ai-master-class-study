@@ -2,20 +2,12 @@ import asyncio
 
 import dotenv
 import streamlit as st
-from agents import RunContextWrapper, Runner, SQLiteSession, function_tool
+from agents import InputGuardrailTripwireTriggered, Runner, SQLiteSession
 from models import UserAccountContext
+from my_agents.triage_agent import triage_agent
 from openai import OpenAI
 
 dotenv.load_dotenv()
-
-
-@function_tool
-def get_user_tier(wrapper: RunContextWrapper[UserAccountContext]):
-
-    return (
-        f"The user {wrapper.context.customer_id} has a {wrapper.context.tier} account."
-    )
-
 
 client = OpenAI()
 
@@ -25,13 +17,16 @@ user_account_ctx = UserAccountContext(
     tier="basic",
 )
 
+
 if "session" not in st.session_state:
     st.session_state["session"] = SQLiteSession(
         "chat-history",
         "customer-support-memory.db",
     )
-
 session = st.session_state["session"]
+
+if "agent" not in st.session_state:
+    st.session_state["agent"] = triage_agent
 
 
 async def paint_history():
@@ -57,18 +52,39 @@ async def run_agent(message):
 
         st.session_state["text_placeholder"] = text_placeholder
 
-        stream = Runner.run_streamed(
-            agent,
-            message,
-            session=session,
-            context=user_account_ctx,
-        )
+        try:
 
-        async for event in stream.stream_events():
-            if event.type == "raw_response_event":
-                if event.data.type == "response.output_text.delta":
-                    response += event.data.delta
-                    text_placeholder.write(response.replace("$", "\$"))
+            stream = Runner.run_streamed(
+                st.session_state["agent"],
+                message,
+                session=session,
+                context=user_account_ctx,
+            )
+
+            async for event in stream.stream_events():
+                if event.type == "raw_response_event":
+
+                    if event.data.type == "response.output_text.delta":
+                        response += event.data.delta
+                        text_placeholder.write(response.replace("$", "\$"))
+
+                elif event.type == "agent_updated_stream_event":
+
+                    if st.session_state["agent"].name != event.new_agent.name:
+
+                        st.write(
+                            f"🤖 Transfered from {st.session_state["agent"].name} to {event.new_agent.name}"
+                        )
+
+                        st.session_state["agent"] = event.new_agent
+
+                        text_placeholder = st.empty()
+
+                        st.session_state["text_placeholder"] = text_placeholder
+                        response = ""
+
+        except InputGuardrailTripwireTriggered:
+            st.write("I can't help you with that.")
 
 
 message = st.chat_input(
@@ -76,16 +92,15 @@ message = st.chat_input(
 )
 
 if message:
-    if "text_placeholder" in st.session_state:
-        st.session_state["text_placeholder"].empty()
 
-        if message:
-            with st.chat_message("human"):
-                st.write(message)
-            asyncio.run(run_agent(message))
+    if message:
+        with st.chat_message("human"):
+            st.write(message)
+        asyncio.run(run_agent(message))
 
-    with st.sidebar:
-        reset = st.button("Reset memory")
-        if reset:
-            asyncio.run(session.clear_session())
-        st.write(asyncio.run(session.get_items()))
+
+with st.sidebar:
+    reset = st.button("Reset memory")
+    if reset:
+        asyncio.run(session.clear_session())
+    st.write(asyncio.run(session.get_items()))
