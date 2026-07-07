@@ -2,7 +2,12 @@ import asyncio
 
 import dotenv
 import streamlit as st
-from agents import InputGuardrailTripwireTriggered, Runner, SQLiteSession
+from agents import (
+    InputGuardrailTripwireTriggered,
+    OutputGuardrailTripwireTriggered,
+    Runner,
+    SQLiteSession,
+)
 from models import UserAccountContext
 from my_agents.triage_agent import triage_agent
 from openai import OpenAI
@@ -85,6 +90,10 @@ async def run_agent(message):
 
         except InputGuardrailTripwireTriggered:
             st.write("I can't help you with that.")
+
+        except OutputGuardrailTripwireTriggered:
+            st.write("Cant show you that answer.")
+            st.session_state["text_placeholder"].empty()
 
 
 message = st.chat_input(
