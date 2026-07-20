@@ -1,35 +1,64 @@
+from google.genai import types
 from google.adk.agents import Agent
 from google.adk.models.lite_llm import LiteLlm
+from google.adk.tools import ToolContext
+from google.adk.tools.agent_tool import AgentTool
+
+from .prompt import PROMPT
+from .sub_agents.data_analyst import data_analyst
+from .sub_agents.financial_analyst import financial_analyst
+from .sub_agents.news_analyst import news_analyst
 
 MODEL = LiteLlm("openai/gpt-4o-mini")
 
 
-def get_weather(city: str):
-    return f"The weather in {city} is 30 degrees."
+async def save_advice_report(tool_context: ToolContext, summary: str, ticker: str):
+    state = tool_context.state
+    data_analyst_result = state.get("data_analyst_result")
+    financial_analyst_result = state.get("financial_analyst_result")
+    news_analyst_result = state.get("news_analyst_result")
+
+    report = f"""
+    # Excutive Summary and Advice:
+    {summary}
+    
+    ## Data Analyst Report:
+    {data_analyst_result}
+    
+    ## Financial Analyst Report:
+    {financial_analyst_result}
+    
+    ## News Analyst Report:
+    {news_analyst_result}
+    """
+
+    state["report"] = report
+ 
+    filename = f"{ticker}_investment_advice.md"
+    artifact = types.Part(
+        inline_data = types.Blob(
+            mime_type="text/markdown",
+            data=report.encode("utf-8")
+        )
+    )
+    
+    await tool_context.save_artifact(filename, artifact)
+
+    return {
+        "success": True,
+    }
 
 
-def convert_units(degree: int):
-    return "That is 40 farenheit"
-
-
-geo_agent = Agent(
-    name="GeoAgent",
-    instruction="You help with geo questions",
-    model=MODEL,
-    description="Transfer to this agent when you have a geo related question.",
-)
-
-weather_agent = Agent(
-    name="WeatherAgent",
-    instruction="You help the user with weather related questions",
+financial_advisor = Agent(
+    name="FinancialAdvisor",
+    instruction=PROMPT,
     model=MODEL,
     tools=[
-        get_weather,
-        convert_units,
-    ],
-    sub_agents=[
-        geo_agent,
+        AgentTool(agent=financial_analyst),
+        AgentTool(agent=news_analyst),
+        AgentTool(agent=data_analyst),
+        save_advice_report,
     ],
 )
 
-root_agent = weather_agent
+root_agent = financial_advisor
