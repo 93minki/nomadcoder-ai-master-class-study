@@ -19,7 +19,7 @@ def before_model_callback(
 ) -> LlmResponse:
 
     history = llm_request.contents
-    last_message = history[:-1]
+    last_message = history[-1]
 
     if last_message.role == "user":
         text = last_message.parts[0].text

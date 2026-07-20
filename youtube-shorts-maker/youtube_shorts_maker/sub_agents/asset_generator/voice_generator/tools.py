@@ -59,12 +59,10 @@ async def generate_narrations(
 
         generated_narrations.append(
             {
-                {
-                    "scene_id": scene_id,
-                    "filename": filename,
-                    "input": text_input,
-                    "instructions": instructions[:50],
-                }
+                "scene_id": scene_id,
+                "filename": filename,
+                "input": text_input,
+                "instructions": instructions[:50],
             }
         )
 
