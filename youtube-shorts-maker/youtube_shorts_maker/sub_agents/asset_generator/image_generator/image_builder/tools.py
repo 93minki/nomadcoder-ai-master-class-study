@@ -8,7 +8,7 @@ client = OpenAI()
 
 
 async def generate_images(tool_context: ToolContext):
-    prompt_builder_output = tool_context.get("prompt_builder_output")
+    prompt_builder_output = tool_context.state.get("prompt_builder_output")
     optimized_prompts = prompt_builder_output.get("optimized_prompts")
 
     existing_artifacts = await tool_context.list_artifacts()
