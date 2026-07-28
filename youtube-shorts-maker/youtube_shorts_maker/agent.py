@@ -23,7 +23,7 @@ def before_model_callback(
 
     if last_message.role == "user":
         text = last_message.parts[0].text
-        if "hummus" in text:
+        if text and "hummus" in text:
             return LlmResponse(
                 content=types.Content(
                     parts=[
