@@ -1,0 +1,471 @@
+{
+  "eval_set_id": "TravelEval",
+  "name": "TravelEval",
+  "eval_cases": [
+    {
+      "eval_id": "JejuSept",
+      "conversation": [
+        {
+          "invocation_id": "e-70e05c0d-cbcc-476b-9a7f-a43852205fc5",
+          "user_content": {
+            "parts": [
+              {
+                "text": "안녕"
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "안녕하세요! 어떻게 도와드릴까요? 여행 계획이나 특정 장소에 대해 궁금한 점이 있다면 말씀해 주세요!"
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {},
+          "creation_timestamp": 1785218581.170849
+        },
+        {
+          "invocation_id": "e-02487202-a2f8-412a-ae31-674a8835083e",
+          "user_content": {
+            "parts": [
+              {
+                "text": "9월에 제주도에 여행가려고 해"
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "제주도는 9월에 방문하기에 아주 좋은 장소입니다. 제주도의 아름다운 자연 경관과 다양한 활동을 즐길 수 있습니다. 여행 계획을 위해 필요한 정보를 알려드릴게요!\n\n1. **날씨 정보**: 9월의 제주도 날씨는 대체로 온화하고 쾌적합니다. 하지만 비가 오는 날도 있을 수 있으니 예보를 확인하는 것이 좋습니다.\n2. **관광 명소**: 제주도에는 다양한 명소가 있습니다. 예를 들어, 한라산, 성산 일출봉, 협재해수욕장, 그리고 제주시와 서귀포시의 다양한 카페와 식당들이 유명합니다.\n3. **환율 정보**: 제주에서 사용할 통화는 대한민국 원(KRW)입니다. 다른 통화에서 환전할 계획이신 경우, 환율 정보를 제공할 수 있습니다.\n\n더 궁금한 사항이 있다면 말씀해 주세요! 날씨나 관광 명소, 환율 정보 등을 확인해드릴게요."
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {},
+          "creation_timestamp": 1785218596.377713
+        },
+        {
+          "invocation_id": "e-68039af9-b40d-41d6-b5e1-71f3bdcb4ed1",
+          "user_content": {
+            "parts": [
+              {
+                "text": "전부 다 필요해"
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "제주도에 대한 정보는 다음과 같습니다:\n\n### 1. 날씨 정보\n- **온도:** 22°C\n- **날씨 상태:** 흐림 (Partly cloudy)\n- **습도:** 65%\n- **바람:** 12 km/h\n- **예상 날씨:** 온화한 날씨와 간헐적으로 구름이 있는 날이 예상됩니다.\n\n### 2. 관광 명소\n제주도에서 방문할 수 있는 인기 명소입니다:\n- **시티 센터 (City Center)**: 주요 다운타운 지역, 리뷰 평점 4.2\n- **역사 박물관 (Historical Museum)**: 지역 역사와 문화를 다루는 박물관, 리뷰 평점 4.3\n- **중앙 공원 (Central Park)**: 주요 공공 공원, 리뷰 평점 4.1\n- **올드 타운 (Old Town)**: 전통적인 건축물이 있는 역사적 지역, 리뷰 평점 4.4\n- **로컬 시장 (Local Market)**: 전통적인 지역 시장, 리뷰 평점 4.0\n\n### 3. 환율 정보\n- **1 USD**는 **1,325 KRW**입니다. \n   \n이 정보를 바탕으로 제주도 여행을 계획하는 데 도움이 되기를 바랍니다. 추가로 궁금한 사항이 있으면 언제든지 말씀해 주세요!"
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "invocation_events": [
+              {
+                "author": "TravelAdvisorAgent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_call": {
+                        "id": "call_fcX2UbeLDb1cn8XR5qyUeDsP",
+                        "args": {
+                          "location": "Jeju"
+                        },
+                        "name": "get_weather"
+                      }
+                    },
+                    {
+                      "function_call": {
+                        "id": "call_YIre5MhEIuL3Qe5EMc4eRQ2C",
+                        "args": {
+                          "location": "Jeju"
+                        },
+                        "name": "get_local_attractions"
+                      }
+                    },
+                    {
+                      "function_call": {
+                        "id": "call_fVkOaKVbiUx2U5bgNh1SFlRu",
+                        "args": {
+                          "from_currency": "USD",
+                          "to_currency": "KRW",
+                          "amount": 1
+                        },
+                        "name": "get_exchange_rate"
+                      }
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "TravelAdvisorAgent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_response": {
+                        "id": "call_fcX2UbeLDb1cn8XR5qyUeDsP",
+                        "name": "get_weather",
+                        "response": {
+                          "location": "Jeju",
+                          "temperature": "22°C",
+                          "condition": "Partly cloudy",
+                          "humidity": "65%",
+                          "wind": "12 km/h",
+                          "forecast": "Mild weather with occasional clouds expected throughout the day"
+                        }
+                      }
+                    },
+                    {
+                      "function_response": {
+                        "id": "call_YIre5MhEIuL3Qe5EMc4eRQ2C",
+                        "name": "get_local_attractions",
+                        "response": {
+                          "location": "Jeju",
+                          "category": "all",
+                          "attractions": [
+                            {
+                              "name": "City Center",
+                              "type": "area",
+                              "rating": 4.2,
+                              "description": "Main downtown area"
+                            },
+                            {
+                              "name": "Historical Museum",
+                              "type": "museum",
+                              "rating": 4.3,
+                              "description": "Local history and culture"
+                            },
+                            {
+                              "name": "Central Park",
+                              "type": "park",
+                              "rating": 4.1,
+                              "description": "Main public park"
+                            },
+                            {
+                              "name": "Old Town",
+                              "type": "district",
+                              "rating": 4.4,
+                              "description": "Historic district with traditional architecture"
+                            },
+                            {
+                              "name": "Local Market",
+                              "type": "market",
+                              "rating": 4.0,
+                              "description": "Traditional local marketplace"
+                            }
+                          ],
+                          "total_count": 5
+                        }
+                      }
+                    },
+                    {
+                      "function_response": {
+                        "id": "call_fVkOaKVbiUx2U5bgNh1SFlRu",
+                        "name": "get_exchange_rate",
+                        "response": {
+                          "from_currency": "USD",
+                          "to_currency": "KRW",
+                          "amount": 1,
+                          "exchange_rate": 1325.0,
+                          "converted_amount": 1325.0,
+                          "timestamp": "2024-03-15 10:30:00 UTC"
+                        }
+                      }
+                    }
+                  ],
+                  "role": "user"
+                }
+              }
+            ]
+          },
+          "creation_timestamp": 1785218614.1992068
+        }
+      ],
+      "session_input": {
+        "app_name": "travel_advisor",
+        "user_id": "user"
+      },
+      "creation_timestamp": 1785218650.995214
+    },
+    {
+      "eval_id": "Paris",
+      "conversation": [
+        {
+          "invocation_id": "e-718dbd93-3f5b-4729-b540-1d8ec03502e6",
+          "user_content": {
+            "parts": [
+              {
+                "text": "안녕"
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "안녕하세요! 어떻게 도와드릴까요? 여행 계획이나 특정 장소에 대한 정보가 필요하신가요?"
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {},
+          "creation_timestamp": 1785220741.078295
+        },
+        {
+          "invocation_id": "e-8763aa48-dd20-444a-8307-a83ae04d94d8",
+          "user_content": {
+            "parts": [
+              {
+                "text": "파리 날씨는 어때?"
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "현재 파리의 날씨는 다음과 같습니다:\n\n- **온도**: 22°C\n- **날씨 상태**: 부분적으로 흐림\n- **습도**: 65%\n- **바람**: 12 km/h\n- **예보**: 오늘은 온화한 날씨가 지속되며 가끔 구름이 끼는 것으로 예상됩니다.\n\n파리를 여행하시기에 좋은 날씨네요! 다른 질문이나 도움이 필요한 부분이 있으면 말씀해 주세요."
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "invocation_events": [
+              {
+                "author": "TravelAdvisorAgent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_call": {
+                        "id": "call_KkaMeJAGxPwVjm9J8j8FfnfM",
+                        "args": {
+                          "location": "Paris"
+                        },
+                        "name": "get_weather"
+                      }
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "TravelAdvisorAgent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_response": {
+                        "id": "call_KkaMeJAGxPwVjm9J8j8FfnfM",
+                        "name": "get_weather",
+                        "response": {
+                          "location": "Paris",
+                          "temperature": "22°C",
+                          "condition": "Partly cloudy",
+                          "humidity": "65%",
+                          "wind": "12 km/h",
+                          "forecast": "Mild weather with occasional clouds expected throughout the day"
+                        }
+                      }
+                    }
+                  ],
+                  "role": "user"
+                }
+              }
+            ]
+          },
+          "creation_timestamp": 1785220751.9143848
+        },
+        {
+          "invocation_id": "e-357501e5-870a-4ab2-aff1-59169ddb3981",
+          "user_content": {
+            "parts": [
+              {
+                "text": "그러면 환율은?"
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "어떤 통화에서 어떤 통화로 환율을 알고 싶으신가요? 예를 들어, 한국 원(₩)에서 유로(€)로 환율을 알고 싶으신지, 아니면 다른 통화가 필요하신지 말씀해 주세요!"
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {},
+          "creation_timestamp": 1785220758.598716
+        },
+        {
+          "invocation_id": "e-4b455f70-441f-4be0-9d61-bd80c11652db",
+          "user_content": {
+            "parts": [
+              {
+                "text": "원으로 궁금해"
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "현재 10,000 한국 원(KRW)은 약 1 유로(EUR)의 환율로 변환됩니다. \n\n혹시 더 많은 금액이나 다른 통화에 대한 정보가 필요하시면 말씀해 주세요!"
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "invocation_events": [
+              {
+                "author": "TravelAdvisorAgent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_call": {
+                        "id": "call_imzpiMqYWWQMtalpugKH1PqZ",
+                        "args": {
+                          "from_currency": "KRW",
+                          "to_currency": "EUR",
+                          "amount": 10000
+                        },
+                        "name": "get_exchange_rate"
+                      }
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "TravelAdvisorAgent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_response": {
+                        "id": "call_imzpiMqYWWQMtalpugKH1PqZ",
+                        "name": "get_exchange_rate",
+                        "response": {
+                          "from_currency": "KRW",
+                          "to_currency": "EUR",
+                          "amount": 10000,
+                          "exchange_rate": 1.0,
+                          "converted_amount": 10000.0,
+                          "timestamp": "2024-03-15 10:30:00 UTC"
+                        }
+                      }
+                    }
+                  ],
+                  "role": "user"
+                }
+              }
+            ]
+          },
+          "creation_timestamp": 1785220765.100398
+        },
+        {
+          "invocation_id": "e-50a4944f-952e-4fcf-a5e0-437170518c83",
+          "user_content": {
+            "parts": [
+              {
+                "text": "파리 랜드마크가 궁금해"
+              }
+            ],
+            "role": "user"
+          },
+          "final_response": {
+            "parts": [
+              {
+                "text": "파리의 유명 랜드마크는 다음과 같습니다:\n\n1. **에펠탑 (Eiffel Tower)**\n   - **유형**: 랜드마크\n   - **평점**: 4.8\n   - **설명**: 상징적인 철제망탑으로, 파리의 아이콘입니다.\n\n2. **루브르 박물관 (Louvre Museum)**\n   - **유형**: 박물관\n   - **평점**: 4.7\n   - **설명**: 세계에서 가장 큰 미술관으로, 다양한 예술 작품이 전시되어 있습니다.\n\n3. **샹젤리제 개선문 (Arc de Triomphe)**\n   - **유형**: 기념비\n   - **평점**: 4.6\n   - **설명**: 역사적인 개선문으로, 프랑스의 군사적 승리를 기념합니다.\n\n4. **노틀담 대성당 (Notre-Dame)**\n   - **유형**: 대성당\n   - **평점**: 4.5\n   - **설명**: 중세 가톨릭 대성당으로, 아름다운 건축물입니다.\n\n5. **사크레쾨르 대성당 (Sacré-Cœur)**\n   - **유형**: 성당\n   - **평점**: 4.4\n   - **설명**: 로마 비잔틴 양식의 성당으로, 파리의 높은 지대에 위치해 있습니다.\n\n이 외에도 더 많은 명소가 있으니, 궁금한 점이 있으면 언제든지 문의해 주세요!"
+              }
+            ],
+            "role": "model"
+          },
+          "intermediate_data": {
+            "invocation_events": [
+              {
+                "author": "TravelAdvisorAgent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_call": {
+                        "id": "call_lgOegaQoMX2Qq8IeYJSpxgNB",
+                        "args": {
+                          "location": "Paris"
+                        },
+                        "name": "get_local_attractions"
+                      }
+                    }
+                  ],
+                  "role": "model"
+                }
+              },
+              {
+                "author": "TravelAdvisorAgent",
+                "content": {
+                  "parts": [
+                    {
+                      "function_response": {
+                        "id": "call_lgOegaQoMX2Qq8IeYJSpxgNB",
+                        "name": "get_local_attractions",
+                        "response": {
+                          "location": "Paris",
+                          "category": "all",
+                          "attractions": [
+                            {
+                              "name": "Eiffel Tower",
+                              "type": "landmark",
+                              "rating": 4.8,
+                              "description": "Iconic iron lattice tower"
+                            },
+                            {
+                              "name": "Louvre Museum",
+                              "type": "museum",
+                              "rating": 4.7,
+                              "description": "World's largest art museum"
+                            },
+                            {
+                              "name": "Arc de Triomphe",
+                              "type": "monument",
+                              "rating": 4.6,
+                              "description": "Historic triumphal arch"
+                            },
+                            {
+                              "name": "Notre-Dame",
+                              "type": "cathedral",
+                              "rating": 4.5,
+                              "description": "Medieval Catholic cathedral"
+                            },
+                            {
+                              "name": "Sacré-Cœur",
+                              "type": "basilica",
+                              "rating": 4.4,
+                              "description": "Romano-Byzantine basilica"
+                            }
+                          ],
+                          "total_count": 5
+                        }
+                      }
+                    }
+                  ],
+                  "role": "user"
+                }
+              }
+            ]
+          },
+          "creation_timestamp": 1785220777.5915651
+        }
+      ],
+      "session_input": {
+        "app_name": "travel_advisor",
+        "user_id": "user"
+      },
+      "creation_timestamp": 1785220844.731796
+    }
+  ],
+  "creation_timestamp": 1785218639.953163
+}
