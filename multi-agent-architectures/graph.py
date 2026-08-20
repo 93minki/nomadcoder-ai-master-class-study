@@ -1,14 +1,27 @@
+from typing import Literal
+
 from langchain.chat_models import init_chat_model
-from langchain_core.tools import tool
 from langgraph.graph import END, START, StateGraph
 from langgraph.graph.message import MessagesState
 from langgraph.prebuilt import ToolNode, tools_condition
 from langgraph.types import Command
+from pydantic import BaseModel
+
+
+class SupervisorOutput(BaseModel):
+    next_agent: Literal[
+        "korean_agent",
+        "greek_agent",
+        "spanish_agent",
+        "__end__",
+    ]
+    reasoning: str
 
 
 class AgentsState(MessagesState):
     current_agent: str
     transfered_by: str
+    reasoning: str
 
 
 llm = init_chat_model("openai:gpt-4o")
@@ -21,8 +34,6 @@ def make_agent(prompt, tools):
         response = llm_with_tools.invoke(
             f"""
         {prompt}
-
-        You have a tool called 'handoff_tool' use it to transfer to other agent, don't use it to transfer to yourself.
 
         Conversation History:
         {state["messages"]}
@@ -46,69 +57,77 @@ def make_agent(prompt, tools):
     return agent_builder.compile()
 
 
-@tool
-def handoff_tool(transfer_to: str, transfered_by: str):
+def supervisor(state: AgentsState):
+    structured_llm = llm.with_structured_output(SupervisorOutput)
+    response = structured_llm.invoke(
+        f"""
+        You are a supervisor that routes conversations to the appropriate language agent.
+
+        Analyse the customers request and the conversation history and decide which agent should handle the conversation.
+
+        The options for the next agent are:
+        - greek_agent
+        - spanish_agent
+        - korean_agent      
+        - __end__
+        
+        <CONVERSATION_HISTORY>
+        {state.get("messages", [])}
+        </CONVERSATION_HISTORY>
+
+        IMPORTANT:
+        
+        Never transfer to the same agent twice in a row.
+
+        If an agent has replied end the conversation by returning __end__
     """
-    Handoff to another agent.
-
-    Use this tool when the customer speaks a language that you don't understand.
-
-    Possible values for `transfer_to`:
-    - `korean_agent`
-    - `greek_agent`
-    - `spanish_agent`
-
-    Possible values for `transfered_by`:
-    - `korean_agent`
-    - `greek_agent`
-    - `spanish_agent`
-
-    Args:
-        transfer_to: The agent to transfer the conversation to
-        transfered_by: The agent that transferred the conversation
-    """
-    if transfer_to == transfered_by:
-        return {
-            "error": "Stop trying to transfer to yourself and answer the question or i will fire you."
-        }
-
+    )
     return Command(
+        goto=response.next_agent,
         update={
-            "current_agent": transfer_to,
-            "transfered_by": transfered_by,
+            "reasoning": response.reasoning,
         },
-        goto=transfer_to,
-        graph=Command.PARENT,
     )
 
 
 graph_builder = StateGraph(AgentsState)
 
 graph_builder.add_node(
+    "supervisor",
+    supervisor,
+    destinations=[
+        "korean_agent",
+        "greek_agent",
+        "spanish_agent",
+        "__end__",
+    ],
+)
+
+graph_builder.add_node(
     "korean_agent",
     make_agent(
         prompt="You're a Korean customer support agent. You only speak and understand Korean.",
-        tools=[handoff_tool],
+        tools=[],
     ),
-    destinations=("greek_agent", "spanish_agent"),
 )
 graph_builder.add_node(
     "greek_agent",
     make_agent(
         prompt="You're a Greek customer support agent. You only speak and understand Greek.",
-        tools=[handoff_tool],
+        tools=[],
     ),
-    destinations=("korean_agent", "spanish_agent"),
 )
 graph_builder.add_node(
     "spanish_agent",
     make_agent(
         prompt="You're a Spanish customer support agent. You only speak and understand Spanish.",
-        tools=[handoff_tool],
+        tools=[],
     ),
-    destinations=("greek_agent", "korean_agent"),
 )
 
-graph_builder.add_edge(START, "korean_agent")
+graph_builder.add_edge(START, "supervisor")
+graph_builder.add_edge("korean_agent", "supervisor")
+graph_builder.add_edge("greek_agent", "supervisor")
+graph_builder.add_edge("spanish_agent", "supervisor")
 
 graph = graph_builder.compile()
