@@ -1,0 +1,35 @@
+POST http://localhost:8000/conversations
+
+### 
+POST http://localhost:8000/conversations/conv_6a8d287c8ad08194bf700f35ed2c98140370a1c99cd4cc04/message
+Content-Type: application/json
+
+{
+  "question": "내가 이전에 물어본 질문은 뭐야?"
+}
+
+### 
+POST http://localhost:8000/conversations/conv_6a8d287c8ad08194bf700f35ed2c98140370a1c99cd4cc04/message-stream
+Content-Type: application/json
+
+{
+  "question": "내가 이전에 물어본 질문은 뭐야?"
+}
+
+
+
+curl -N -X POST http://localhost:8000/conversations/conv_6a8d287c8ad08194bf700f35ed2c98140370a1c99cd4cc04/message-stream-all \                                      ok  9s  15:48:35
+-H "Content-Type: application/json" \
+-d '{"question": "AI Agent는 뭔지 정의해봐"}
+
+
+
+curl -N -X POST http://localhost:8000/conversations/conv_6a8d287c8ad08194bf700f35ed2c98140370a1c99cd4cc04/message-stream \                                      ok  9s  15:48:35
+-H "Content-Type: application/json" \
+-d '{"question": "AI Agent는 뭔지 정의해봐"}
+'
+
+curl -N -X POST "http://127.0.0.1:8000/conversations/conv_6a8d287c8ad08194bf700f35ed2c98140370a1c99cd4cc04/message-stream-all" \
+-H "Content-Type: application/json" \
+-d '{"question":"AI Agent는 뭔지 정의해봐"}'
+
